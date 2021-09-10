@@ -3,7 +3,7 @@ export class MutableArraySlice<T> {
     [key: number] : T,
     start: number
     end: number
-    private array: WeakRef<Array<T>>
+    private array: WeakRef<T[]>
     constructor(arr: T[], start?: number, end?: number) {
         this.array = new WeakRef(arr);
         if (start !== undefined) {
