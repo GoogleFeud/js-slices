@@ -4,7 +4,8 @@
   "description": "Javascript slices",
   "main": "dist/index.js",
   "scripts": {
-    "test": "tsc && node ."
+    "test": "tsc && node .",
+    "benchmark": "ts-node benchmarks/index.ts"
   },
   "repository": {
     "type": "git",

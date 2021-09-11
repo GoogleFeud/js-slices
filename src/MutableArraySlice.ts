@@ -45,57 +45,47 @@ export class MutableArraySlice<T> {
         return this.array[(index < 0 ? this.end : this.start) + index];
     }
 
-    every(cb: (el: T, index: number, slice: this, originalIndex: number) => boolean) : boolean {
-        const arr = this.array;
-        for (let i=this.start, j = 0; i < this.end; i++, j++) {
-            if (!cb(arr[i], j, this, i)) return false;
-        }
+    every(cb: (el: T, slice: this, originalIndex: number) => boolean) : boolean {
+        const arr = this.array, end = this.end;
+        for (let i=this.start; i < end; i++) if (!cb(arr[i], this, i)) return false;
         return true;
     }
 
-    some(cb: (el: T, index: number, slice: this, originalIndex: number) => boolean) : boolean {
-        const arr = this.array;
-        for (let i=this.start, j = 0; i < this.end; i++, j++) {
-            if (cb(arr[i], j, this, i)) return true;
-        }
+    some(cb: (el: T, slice: this, originalIndex: number) => boolean) : boolean {
+        const arr = this.array, end = this.end;
+        for (let i=this.start; i < end; i++) if (cb(arr[i], this, i)) return true;
         return false;
     }
 
-    find(cb: (el: T, index: number, slice: this, originalIndex: number) => boolean) : T|undefined {
-        const arr = this.array;
-        for (let i=this.start, j = 0; i < this.end; i++, j++) {
-            if (cb(arr[i], j, this, i)) return arr[i];
-        }
+    find(cb: (el: T, slice: this, originalIndex: number) => boolean) : T|undefined {
+        const arr = this.array, end = this.end;
+        for (let i=this.start; i < end; i++) if (cb(arr[i], this, i)) return arr[i];
     }
 
-    filter(cb: (el: T, index: number, slice: this, originalIndex: number) => boolean) : Array<T> {
-        const arr = this.array;
+    filter(cb: (el: T, slice: this, originalIndex: number) => boolean) : Array<T> {
+        const arr = this.array, end = this.end;
         const res = [];
-        for (let i=this.start, j = 0; i < this.end; i++, j++) {
-            if (cb(arr[i], j, this, i)) res.push(arr[i]);
-        }
+        for (let i=this.start, j = 0; i < end; i++, j++) if (cb(arr[i], this, i)) res.push(arr[i]);
         return res;
     }
 
-    map<R = unknown>(cb: (el: T, index: number, slice: this, originalIndex: number) => R) : Array<R> {
-        const arr = this.array;
+    map<R = unknown>(cb: (el: T, slice: this, originalIndex: number) => R) : Array<R> {
+        const arr = this.array, end = this.end;
         const res = [];
-        for (let i=this.start, j = 0; i < this.end; i++, j++) res.push(cb(arr[i], j, this, i));
+        for (let i=this.start; i < end; i++) res.push(cb(arr[i], this, i));
         return res;
     }
 
-    reduce<R = unknown>(cb: (el: T, index: number, slice: this, originalIndex: number) => R, defaultValue?: R) : R|undefined {
-        const arr = this.array;
+    reduce<R = unknown>(cb: (el: T, slice: this, originalIndex: number) => R, defaultValue?: R) : R|undefined {
+        const arr = this.array, end = this.end;
         let acc = defaultValue;
-        for (let i=this.start, j = 0; i < this.end; i++, j++) acc = cb(arr[i], j, this, i);
+        for (let i=this.start; i < end; i++) acc = cb(arr[i], this, i);
         return acc;
     }
 
     includes(item: T) : boolean {
-        const arr = this.array;
-        for (let i=this.start; i < this.end; i++) {
-            if (arr[i] === item) return true;
-        }
+        const arr = this.array, end = this.end;
+        for (let i=this.start; i < end; i++) if (arr[i] === item) return true;
         return false;
     }
 
@@ -115,15 +105,16 @@ export class MutableArraySlice<T> {
         let str = "";
         const arr = this.array;
         const newEnd = this.end - 1;
-        for (let i=this.start; i <= newEnd; i++) {
+        for (let i = this.start; i <= newEnd; i++) {
             str += arr[i];
             if (i !== newEnd) str += delimiter;
         } 
         return str;
     }
 
-    forEach(cb: (el: T, index: number, slice: this, originalIndex: number) => void) : void {
-        for (let i=this.start, j = 0; i < this.end; i++, j++) cb(this.array[i], j, this, i);
+    forEach(cb: (el: T, slice: this, originalIndex: number) => void) : void {
+        const end = this.end;
+        for (let i = this.start; i < end; i++) cb(this.array[i], this, i);
     }
 
     push(...vals: T[]) : number {

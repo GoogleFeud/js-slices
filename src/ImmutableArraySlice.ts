@@ -11,4 +11,9 @@ export class ImmutableArraySlice<T> extends MutableArraySlice<T> {
             }
         });
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    push(..._vals: T[]) : number {
+        throw new Error("Cannot push to immutable slice!");
+    }
 }
